@@ -1,0 +1,24 @@
+- name: Test openstack with gabbi
+  hosts: tester
+  gather_facts: yes
+  any_errors_fatal: true
+  tasks:
+      - name: Prepare gabbi files
+        include: tasks/pre.yml
+        tags:
+            - pre
+
+      - name: load setup vars
+        include_vars: "vars/setup/{{ test.setup }}.yml"
+        tags:
+            - always
+
+      - name: Setup gabbi environment
+        include: tasks/setup.yml
+        tags:
+            - setup
+
+      - name: Run gabbi tests
+        include: tasks/run.yml
+        tags:
+            - run
