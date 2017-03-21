@@ -1,3 +1,6 @@
-# UUID       	Group Name
+# UUID                                  	Group Name
 #
-user:obaranov	user/Oleksii Baranov (obaranov)
+6bb5f78d4182efb8d965219c5b183ba5d989d89a	rhosqeauto-contrib
+global:Anonymous-Users                  	Anonymous Users
+global:Registered-Users                 	Registered Users
+user:obaranov                           	user/Oleksii Baranov (obaranov)
