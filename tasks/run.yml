@@ -42,7 +42,7 @@
       openstack catalog show aodh
   register: aodh_available
   ignore_errors: yes
-  tags: skip_ansible_lint  
+  tags: skip_ansible_lint
 
 - name: assert Ceilometer installed on undercloud
   shell: |
