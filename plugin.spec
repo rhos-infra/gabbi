@@ -1,8 +1,7 @@
 plugin_type: test
-description: The gabbi test runner
 subparsers:
     gabbi:
-        help: The gabbi test runner
+        description: The gabbi test runner
         include_groups: ["Ansible options", "Inventory", "Common options", "Answers file"]
         groups:
             - title: Gabbi
