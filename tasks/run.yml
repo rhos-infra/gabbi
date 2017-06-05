@@ -7,13 +7,13 @@
       /usr/sbin/sysctl -a 2>/dev/null | grep 'ipv6\.conf\..*\.disabl' | sed -e 's/= 1/= 0/' -e 's/\ //g'
   register: reenable_ipv6
   ignore_errors: yes
-  when: "'{{ network.protocol }}' == 'ipv6'"
+  when: "network.protocol == 'ipv6'"
 
 - name: debug reenable_ipv6
   debug:
       var: reenable_ipv6
       verbosity: 3
-  when: "'{{ network.protocol }}' == 'ipv6'"
+  when: "network.protocol == 'ipv6'"
 
 - name: reenable IPv6 with sysctl
   become: yes
@@ -21,20 +21,20 @@
   register: sysctl_update
   with_items: "{{ reenable_ipv6.stdout_lines|default([]) }}"
   ignore_errors: yes
-  when: "'{{ network.protocol }}' == 'ipv6'"
+  when: "network.protocol == 'ipv6'"
 
 - name: debug sysctl_update
   debug:
       var: sysctl_update
       verbosity: 3
-  when: "'{{ network.protocol }}' == 'ipv6'"
+  when: "network.protocol == 'ipv6'"
 
 - name: restart connections
   become: yes
   shell: |
       /usr/bin/nmcli connection down "System {{ item.name }}" ; /usr/bin/nmcli connection up "System {{ item.name }}"
   with_items: "{{ network.interfaces }}"
-  when: "'{{ network.protocol }}' == 'ipv6'"
+  when: "network.protocol == 'ipv6'"
 
 - name: assert AODH installed on undercloud
   shell: |
@@ -60,7 +60,7 @@
       deactivate
   args:
       chdir: "{{ setup.repo_dest }}"
-  when: "'{{ ceilometer_available.stdout }}' != ''"
+  when: "ceilometer_available.stdout != ''"
   tags: skip_ansible_lint
 
 
@@ -73,7 +73,7 @@
       - results.html
       - results.xml
       - results.txt
-  when: "'{{ ceilometer_available.stdout }}' != ''"
+  when: "ceilometer_available.stdout != ''"
 
 - name: gabbi run alarming undercloud
   shell: |
@@ -83,7 +83,7 @@
       deactivate
   args:
       chdir: "{{ setup.repo_dest }}"
-  when: "'{{ aodh_available.stdout }}' != ''"
+  when: "aodh_available.stdout != ''"
   tags: skip_ansible_lint
 
 - name: fetch alarming results
@@ -95,7 +95,7 @@
       - results.html
       - results.xml
       - results.txt
-  when: "'{{ aodh_available.stdout }}' != ''"
+  when: "aodh_available.stdout != ''"
 
 - name: assert Ceilometer installed on overcloud
   shell: |
@@ -113,7 +113,7 @@
       deactivate
   args:
       chdir: "{{ setup.repo_dest }}"
-  when: "{{ ceilometer_overcloud.rc | int }} != 1"
+  when: "ceilometer_overcloud.rc|int != 1"
   tags: skip_ansible_lint
 
 - name: fetch METERING results
@@ -125,7 +125,7 @@
       - results.html
       - results.xml
       - results.txt
-  when: "{{ ceilometer_overcloud.rc | int }} != 1"
+  when: "ceilometer_overcloud.rc|int != 1"
 
 - name: gabbi run gnocchi overcloud
   shell: |
@@ -158,7 +158,7 @@
       deactivate
   args:
       chdir: "{{ setup.repo_dest }}"
-  when: "{{ test.openstack.version }} < 10"
+  when: "test.openstack.version|int < 10"
   tags: skip_ansible_lint
 
 - name: setup gnocchi resources RHOS10+
@@ -172,7 +172,7 @@
       deactivate
   args:
       chdir: "{{ setup.repo_dest  }}"
-  when: "{{ test.openstack.version }} >= 10"
+  when: "test.openstack.version|int >= 10"
   tags: skip_ansible_lint
 
 - name: gabbi run alarming overcloud
@@ -206,7 +206,7 @@
       deactivate
   args:
       chdir: "{{ setup.repo_dest }}"
-  when: "{{ test.openstack.version }} < 10"
+  when: "test.openstack.version|int < 10"
   tags: skip_ansible_lint
 
 - name: tear-down gnocchi resource RHOS10
@@ -220,5 +220,5 @@
       deactivate
   args:
       chdir: "{{ setup.repo_dest }}"
-  when: "{{ test.openstack.version }} >= 10"
+  when: "test.openstack.version|int >= 10"
   tags: skip_ansible_lint
